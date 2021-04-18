@@ -1,130 +1,80 @@
 <template>
   <div class="bg">
-    <el-card class="login-card">
-      <template #header>
-        <div class="login-card-header">
-          <span>登陆转笔圈</span>
-        </div>
-      </template>
-      <div class="login-form">
-        <el-avatar
-          size="large"
-          src="https://pic3.zhimg.com/v2-89b980f785a7d9dd1068fb9d171ed6cd_is.jpg"
-          class="user-avatar"
-        ></el-avatar>
-        <el-form
-          :model="formData"
-          :rules="rules"
-          ref="ruleForm"
-          class="demo-ruleForm"
+    <login-pane v-show="panelType === 'login'" />
+    <register-pane v-show="panelType === 'register'" />
+    <password-pane v-show="panelType === 'password'" />
+
+    <div class="bottom-tip">
+      <p v-if="panelType !== 'register'">
+        <span class="tip-text">没有账号？</span>
+        <el-button type="primary" size="small" @click="goToRegister()"
+          >注册</el-button
         >
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="formData.username" placeholder="请输入用户名"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="formData.password" placeholder="请输入密码"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')"
-              >登录</el-button
-            >
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-card>
+      </p>
+      <p v-if="panelType !== 'login'">
+        <span class="tip-text">已有账号？</span>
+        <el-button type="primary" size="small" @click="goToLogin()"
+          >登录</el-button
+        >
+      </p>
+      <p v-if="panelType !== 'password'">
+        <span class="tip-text">忘记密码？</span>
+        <el-button type="primary" size="small" @click="goToPassword()"
+          >找回密码</el-button
+        >
+      </p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import Register from "@/components/Register.vue";
+import LoginPane from "@/components/login/LoginPane.vue";
+import RegisterPane from "@/components/login/RegisterPane.vue";
+import PasswordPane from "@/components/login/FindPasswordPane.vue";
 export default {
   name: "LoginPage",
   data() {
     return {
-      formData: {
-        username: "",
-        password: "",
-      },
-      rules: {
-        username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-          {
-            min: 3,
-            max: 16,
-            message: "用户名长度在 3 到 16 个字符",
-            trigger: "blur",
-          },
-        ],
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" }
-        ]
-      },
+      panelType: "login",
     };
   },
+  methods: {
+    goToRegister() {
+      this.panelType = "register";
+    },
+    goToLogin() {
+      this.panelType = "login";
+    },
+    goToPassword() {
+      this.panelType = "password";
+    },
+  },
   components: {
-    Register,
+    LoginPane,
+    RegisterPane,
+    PasswordPane
   },
 };
 </script>
 
-<style>
-@media (max-width: 1920px) {
-  .bg {
-    min-height: 1080px;
-  }
-}
-@media (max-width: 1366px) {
-  .bg {
-    min-height: 768px;
-  }
-}
-@media (max-width: 1280px) {
-  .bg {
-    min-height: 720px;
-  }
-}
+<style lang="less">
 .bg {
   background: url(//cdn88.oss-cn-beijing.aliyuncs.com/zbq/img/back.jpg)
     no-repeat 0px 0px;
   background-size: cover;
   -webkit-background-size: cover;
   overflow: auto;
+  height: 1200px;
 }
-
-.login-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.login-card {
-  min-width: 320px;
-  max-width: 480px;
-  margin: 0 auto;
-  margin-top: 220px;
-  opacity: 0.8;
-}
-
-.el-card__header {
-  padding: 10px 14px;
-}
-
-.login-form {
+.bottom-tip {
+  color: white;
   text-align: center;
-}
-
-.user-avatar {
-  width: 64px;
-  height: 64px;
-  line-height: 64px;
+  margin-top: 40px;
+  p {
+    display: inline;
+  }
+  .tip-text {
+    padding: 0 10px;
+  }
 }
 </style>
