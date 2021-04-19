@@ -7,8 +7,16 @@ import {
 import 'element-plus/lib/theme-chalk/index.css'
 
 import LoginPage from '@/views/LoginPage.vue'
+import MainPage from '@/views/MainPage.vue'
+import MyPage from '@/views/main/MyPage.vue'
 const routes = [
-  { path: '/login', component: LoginPage }
+  { path: '/login', component: LoginPage },
+  {
+    path: '/main', component: MainPage, children: [
+      { path: '/main/my', component: MyPage },
+    ]
+  },
+
 ]
 const router = createRouter({
   // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
