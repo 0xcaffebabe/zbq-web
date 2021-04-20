@@ -1,20 +1,27 @@
 <template>
   <div class="nav-menu-wrapper">
     <el-menu
-      :default-active="activeIndex"
+      default-active="/main/my"
       class="nav-menu"
       mode="horizontal"
       :router="true"
       @select="handleSelect"
     >
-      <el-menu-item
-        v-for="item in menuList"
-        :key="item.index"
-        :index="item.index"
-      >
-        <i :class="item.icon" />
-        <span>{{ item.name }}</span>
-      </el-menu-item>
+      <el-submenu v-for="item in menuList" :key="item.name" :index="item.name">
+        <template #title>
+          <i :class="item.icon" />
+          <span>{{ item.name }}</span>
+        </template>
+        <el-menu-item
+          v-for="children in item.children"
+          :key="children.name"
+          :index="children.index"
+          >
+            <i :class="children.icon"></i>
+            <span>{{ children.name }}</span>
+          </el-menu-item
+        >
+      </el-submenu>
     </el-menu>
   </div>
   <div class="avatar-wrapper">
@@ -25,7 +32,7 @@
     <div class="avatar-cursor"><i class="el-icon-caret-top" /></div>
   </div>
   <div class="content">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -33,22 +40,50 @@
 export default {
   data() {
     return {
+      menuActiveIndex: "my",
       menuList: [
-        { name: "我的", index: "/main/my", icon: "el-icon-user-solid" },
+        {
+          name: "我的",
+          icon: "el-icon-user-solid",
+          index: "my",
+          children: [
+            { name: "我的主页", index: "/main/my", icon: "el-icon-s-home" },
+            { name: "用户中心", index: "/main/users", icon: "el-icon-s-custom" },
+            { name: "设置中心", index: "/main/settings", icon: "el-icon-s-tools" },
+          ],
+        },
         {
           name: "社交",
-          index: "main/social",
           icon: "el-icon-s-platform",
+          index: "social",
+          children: [
+            { name: "我的笔友", index: "main/friends", icon: "el-icon-s-comment" },
+            { name: "笔圈动态", index: "main/activities", icon: "el-icon-camera-solid" },
+            { name: "与我相关" },
+            { name: "转笔地图", index: "main/map", icon: "el-icon-map-location" },
+            { name: "转笔广场", index: "main/square", icon: "el-icon-microphone" },
+          ],
         },
         {
           name: "内容",
-          index: "main/content",
           icon: "el-icon-document",
+          index: "content",
+          children: [
+            { name: "全网转笔" },
+            { name: "发现内容" },
+            { name: "发布内容" },
+            { name: "我的收藏" },
+          ],
         },
         {
           name: "学习",
-          index: "main/learning",
           icon: "el-icon-notebook-1",
+          index: "learning",
+          children: [
+            { name: "课程中心" },
+            { name: "我的课程" },
+            { name: "发布课程" },
+          ],
         },
       ],
     };
@@ -65,7 +100,6 @@ export default {
 .nav-menu-wrapper {
   position: fixed;
   width: 100%;
-  padding: 0 10px;
 }
 .avatar-wrapper {
   position: fixed;
@@ -79,6 +113,22 @@ export default {
   }
   .avatar-cursor {
     text-align: center;
+  }
+}
+@media screen and (max-width: 720px) {
+  .nav-menu-wrapper {
+    bottom: 0;
+  }
+  .nav-menu-wrapper ::v-deep(.el-submenu__title) {
+    padding: 0 10px;
+  }
+}
+@media screen and (min-width: 721px) {
+  .nav-menu-wrapper {
+    top: 0;
+  }
+  .nav-menu-wrapper ::v-deep(.el-submenu__title) {
+    padding: 0 20px;
   }
 }
 </style>
