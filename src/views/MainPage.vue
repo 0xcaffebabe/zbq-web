@@ -24,10 +24,11 @@
       </el-submenu>
     </el-menu>
   </div>
-  <div class="avatar-wrapper">
+  <div class="avatar-wrapper" ref="avatarWrapper" draggable="true" :style="{right: avatarWrapperStyles.right + 'px', bottom: avatarWrapperStyles.bottom + 'px'}">
     <el-avatar
       size="large"
       src="https://pic3.zhimg.com/v2-89b980f785a7d9dd1068fb9d171ed6cd_is.jpg"
+      draggable="true"
     ></el-avatar>
     <div class="avatar-cursor"><i class="el-icon-caret-top" /></div>
   </div>
@@ -37,10 +38,15 @@
 </template>
 
 <script>
+import { CommonProps } from 'element-plus/lib/el-cascader-panel';
 export default {
   data() {
     return {
       menuActiveIndex: "my",
+      avatarWrapperStyles: {
+        right: 40,
+        bottom: 144
+      },
       menuList: [
         {
           name: "我的",
@@ -88,6 +94,26 @@ export default {
       ],
     };
   },
+  mounted(){
+    this.$refs.avatarWrapper.addEventListener("dragend", (e) =>{
+      const x = e.screenX;
+      const y = e.screenY;
+      this.avatarWrapperStyles.right = screen.width - x;
+      this.avatarWrapperStyles.bottom = screen.height - y;
+    });
+    this.$refs.avatarWrapper.addEventListener("drag", (e) =>{
+      const x = e.screenX;
+      const y = e.screenY;
+      this.avatarWrapperStyles.right = screen.width - x;
+      this.avatarWrapperStyles.bottom = screen.height - y;
+    })
+    this.$refs.avatarWrapper.addEventListener("touchmove", (e) =>{
+      const x = e.changedTouches[0].screenX;
+      const y = e.changedTouches[0].screenY;
+      this.avatarWrapperStyles.right = screen.width - x;
+      this.avatarWrapperStyles.bottom = screen.height - y;
+    })
+  }
 };
 </script>
 
